@@ -1,22 +1,18 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const threads = require("../models/threads.js");
-const replies = require("../models/replies.js");
+const threads = require('../models/threads.js');
+const replies = require('../models/replies.js');
 
 module.exports.get = (req, res) => {
-  let Threads = mongoose.model(
-    "Threads",
-    threads.threadsSchema,
-    req.params.board
-  );
+  let Threads = mongoose.model('Threads', threads.threadsSchema, req.params.board);
 
   Threads.find(
-    { _id: thread_id },
+    { _id: req.query.thread_id },
     {
       reported: 0,
       delete_password: 0,
-      "replies.delete_password": 0,
-      "replies.reported": 0,
+      'replies.delete_password': 0,
+      'replies.reported': 0,
     },
     (err, data) => {
       if (err) {
@@ -24,19 +20,15 @@ module.exports.get = (req, res) => {
         return;
       }
 
-      console.log(data);
-      res.json(data);
+      console.log(data[0]);
+      res.json(data[0]);
     }
   );
 };
 
 module.exports.post = (req, res) => {
-  let Threads = mongoose.model(
-    "Threads",
-    threads.threadsSchema,
-    req.params.board
-  );
-  let Replies = mongoose.model("Replies", replies.repliesSchema);
+  let Threads = mongoose.model('Threads', threads.threadsSchema, req.params.board);
+  let Replies = mongoose.model('Replies', replies.repliesSchema);
 
   let now = new Date();
   let newReplies = new Replies({
@@ -46,7 +38,7 @@ module.exports.post = (req, res) => {
   });
 
   Threads.findOneAndUpdate(
-    { _id: thread_id },
+    { _id: req.body.thread_id },
     { $set: { bumped_on: now }, $push: { replies: newReplies } },
     { new: true },
     (err, data) => {
@@ -56,17 +48,13 @@ module.exports.post = (req, res) => {
       }
 
       console.log(data);
-      res.redirect(301, `/b/${req.params.board}/${req.body.thread_id}`);
+      res.redirect(301, `/b/${req.params.board}/${req.body.thread_id}/`);
     }
   );
 };
 
 module.exports.put = (req, res) => {
-  let Threads = mongoose.model(
-    "Threads",
-    threads.threadsSchema,
-    req.params.board
-  );
+  let Threads = mongoose.model('Threads', threads.threadsSchema, req.params.board);
 
   Threads.findOneAndUpdate(
     {
@@ -77,23 +65,19 @@ module.exports.put = (req, res) => {
         },
       },
     },
-    { "replies.$.reported": true },
+    { 'replies.$.reported': true },
     (err, data) => {
       if (err) {
         console.log(err);
       }
 
-      res.text("success");
+      res.send('success');
     }
   );
 };
 
 module.exports.delete = (req, res) => {
-  let Threads = mongoose.model(
-    "Threads",
-    threads.threadsSchema,
-    req.params.board
-  );
+  let Threads = mongoose.model('Threads', threads.threadsSchema, req.params.board);
 
   Threads.findOneAndUpdate(
     {
@@ -105,18 +89,18 @@ module.exports.delete = (req, res) => {
         },
       },
     },
-    { "replies.$.text": "[deleted]" },
+    { 'replies.$.text': '[deleted]' },
     (err, data) => {
       if (err) {
         console.log(err);
-        res.text("incorrect password");
+        res.text('incorrect password');
         return;
       }
 
       if (!data) {
-        res.text("incorrect password");
+        res.text('incorrect password');
       } else {
-        res.text("success");
+        res.text('success');
       }
     }
   );
