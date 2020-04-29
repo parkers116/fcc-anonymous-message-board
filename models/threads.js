@@ -6,7 +6,7 @@ const replies = require("./replies.js");
 
 module.exports.threadsSchema = new Schema(
   {
-    _id: { type: ObjectId, default: new ObjectId() },
+    // _id: { type: ObjectId, default: new ObjectId() },
     text: { type: String, required: true },
     created_on: { type: Date, default: new Date() },
     bumped_on: { type: Date, default: new Date() },
