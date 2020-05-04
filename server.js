@@ -19,6 +19,7 @@ mongoose.connect(process.env.MONGODB_URI, {
   dbName: "fcc-anonymous-message-board",
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useFindAndModify: false,
 });
 mongoose.connection.on(
   "error",

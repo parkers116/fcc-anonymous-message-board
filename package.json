@@ -8,7 +8,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "mocha -u tdd ./tests/1_unit-tests.js ./tests/2_functional-tests.js"
+    "test": "mocha -u tdd --exit ./tests/1_unit-tests.js ./tests/2_functional-tests.js"
   },
   "dependencies": {
     "chai": "^4.2.0",

@@ -16,6 +16,7 @@ module.exports.get = (req, res) => {
       delete_password: 0,
       "replies.delete_password": 0,
       "replies.reported": 0,
+      __v: 0,
     }
   )
     .sort({ bumped_on: -1 })
@@ -33,7 +34,6 @@ module.exports.get = (req, res) => {
         return Object.assign({}, item, { replycount: replycount });
       });
 
-      console.log(data);
       res.json(data);
     });
 };
@@ -57,8 +57,7 @@ module.exports.post = (req, res) => {
       return;
     }
 
-    console.log(`/b/${req.params.board}`);
-    res.redirect(301, `/b/${req.params.board}/`);
+    res.redirect(302, `/b/${req.params.board}/`);
   });
 };
 
@@ -77,7 +76,7 @@ module.exports.put = (req, res) => {
         console.log(err);
       }
 
-      res.text("success");
+      res.send("success");
     }
   );
 };
